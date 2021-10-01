@@ -16,11 +16,11 @@ def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Unio
     if form_class: # class already exists
         return form_class(**kwargs)
 
-    item = forms.get(key, None)
-    if item is None: # the given key does not exist in the config
+    section = forms.get(key, None)
+    if section is None: # the given key does not exist in the config
         return None
 
-    data = get_issue_form_data(item.get("file"))
+    data = get_issue_form_data(section.get("file"))
     body = data["body"]
 
     class IssueForm(FlaskForm):
@@ -42,13 +42,13 @@ def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Unio
         if isinstance(element, MarkdownGithubElement): continue
         setattr(IssueForm, element.id, element.create())
 
-    submit_label = item.get("submit_text", submit_label)
+    submit_label = section.get("submit_text", submit_label)
 
     setattr(IssueForm, "submit", SubmitField(submit_label))
     IssueForm.set_meta("title", data["name"])
     IssueForm.set_meta("description", data["description"])
-    IssueForm.set_meta("fullwidth", item.getboolean("fullwidth", False))
-    IssueForm.set_meta("hide_title", item.getboolean("hide_title", False))
+    IssueForm.set_meta("fullwidth", section.getboolean("fullwidth", False))
+    IssueForm.set_meta("hide_title", section.getboolean("hide_title", False))
 
     form_classes[key] = IssueForm
 
