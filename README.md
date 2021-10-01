@@ -1,3 +1,4 @@
+**Important: This is still work in progress and the actual GitHub API call is not connected to the form action yet!**
 # IssueForms
 IssueForms is an open source way to expose your issue form templates to users, which don't have a GitHub account.
 
