@@ -38,5 +38,5 @@ Now run a development server
 **Important: Flask's builtin WSGI server is only for development and testing. For production/deployment use `gunicorn`, `cheroot` or something similar!**
 
 ## Notes
-* The project depends not only on [Flask](https://flask.palletsprojects.com/en/1.1.x/), but also some Flask plugins (mainly flask-wtf).
+* The project depends not only on [Flask](https://flask.palletsprojects.com/en/2.0.x/), but also some Flask plugins (mainly flask-wtf).
 * The HTML, CSS and JS part of the program depends on [Bootstrap 5](https://getbootstrap.com/). This is implemented via a CDN, so no direct dependency is needed.
