@@ -1,3 +1,4 @@
+from configparser import SectionProxy
 import json
 import yaml
 import requests
@@ -7,21 +8,15 @@ from .parser import *
 
 
 
-def get_issue_form_data(file_name: str) -> dict:
-    USERNAME = config.get("account", "user", fallback=None)
-    PASSWORD = config.get("account", "password", fallback=None)
-
-    REPO_OWNER = config.get("repo", "owner", fallback=USERNAME)
-    REPO_NAME = config.get("repo", "name", fallback=None)
-
+def get_issue_form_data(FILE_NAME: str, REPO_OWNER: str, REPO_NAME: str, USERNAME: str, PASSWORD: str) -> dict:
     session = requests.Session()
     session.auth = (USERNAME, PASSWORD)
 
-    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/.github/ISSUE_TEMPLATE/{file_name}"
+    url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/contents/.github/ISSUE_TEMPLATE/{FILE_NAME}"
     r = session.get(url)
 
     if r.status_code != 200:
-        raise FileNotFoundError(f"\"{file_name}\" was not found in repo {REPO_OWNER}/{REPO_NAME}")
+        raise FileNotFoundError(f"\"{FILE_NAME}\" was not found in repo {REPO_OWNER}/{REPO_NAME}")
 
     src = session.get(json.loads(r.text)["download_url"]).text
 
@@ -29,7 +24,7 @@ def get_issue_form_data(file_name: str) -> dict:
 
 
 
-def add_issue(**kwargs) -> None:
+def add_issue(REPO_OWNER: str, REPO_NAME: str, USERNAME: str, PASSWORD: str, **kwargs) -> None:
     USERNAME = config.get("account", "user", fallback=None)
     PASSWORD = config.get("account", "password", fallback=None)
 

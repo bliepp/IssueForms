@@ -1,6 +1,6 @@
 from flask import Flask, render_template, abort
 
-from .config import config, forms
+from .config import config
 from .forms import DynamicFormGenerator
 
 app = Flask(__name__)

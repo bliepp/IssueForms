@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 
 from .github.parser import GithubElement, MarkdownGithubElement
 from .github.issue import get_issue_form_data
-from .config import forms
+from .config import config, form_sections
 
 
 form_classes = {}
@@ -16,11 +16,18 @@ def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Unio
     if form_class: # class already exists
         return form_class(**kwargs)
 
-    section = forms.get(key, None)
+    section = form_sections.get(key, None)
     if section is None: # the given key does not exist in the config
         return None
 
-    data = get_issue_form_data(section.get("file"))
+    login_credentials = {}
+    login_credentials["FILE_NAME"] = section.get("file", fallback=None)
+    login_credentials["USERNAME"] = config.get("account", "user", fallback=None)
+    login_credentials["PASSWORD"] = config.get("account", "password", fallback=None)
+    login_credentials["REPO_OWNER"] = section.get("repo_owner", fallback=config.get("repo", "owner", fallback=login_credentials["USERNAME"]))
+    login_credentials["REPO_NAME"] = section.get("repo_name", fallback=config.get("repo", "name", fallback=None))
+
+    data = get_issue_form_data(**login_credentials)
     body = data["body"]
 
     class IssueForm(FlaskForm):
@@ -49,6 +56,7 @@ def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Unio
     IssueForm.set_meta("description", data["description"])
     IssueForm.set_meta("fullwidth", section.getboolean("fullwidth", False))
     IssueForm.set_meta("hide_title", section.getboolean("hide_title", False))
+    IssueForm.set_meta("login_credentials", login_credentials)
 
     form_classes[key] = IssueForm
 

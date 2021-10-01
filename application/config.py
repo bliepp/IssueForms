@@ -11,4 +11,4 @@ def get_prefixed_sections(prefix: str) -> Tuple[str, SectionProxy]:
             yield key, config[section]
 
 
-forms = dict(get_prefixed_sections("form"))
+form_sections = dict(get_prefixed_sections("form"))
