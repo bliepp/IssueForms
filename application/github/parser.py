@@ -129,5 +129,5 @@ class TextareaGithubElement(GithubElement, key="textarea"):
             description=self.description,
             id=self.id,
             default=self.value,
-            render_kw={"style": "min-height: 15em", "placeholder": self.placeholder}
+            render_kw={"placeholder": self.placeholder}
         )
