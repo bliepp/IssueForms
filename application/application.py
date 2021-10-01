@@ -14,7 +14,7 @@ def register_project():
 
 
 
-@app.route("/form/<path:key>/", methods=["GET", "POST"])
+@app.route("/<path:key>/", methods=["GET", "POST"])
 def issue_form(key: str):
     form = DynamicFormGenerator(key, meta={"csrf": False})
     if not form:
