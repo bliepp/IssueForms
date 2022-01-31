@@ -1,3 +1,4 @@
+import configparser
 from typing import Union
 from wtforms import Form, StringField, SubmitField
 from wtforms.validators import DataRequired
@@ -15,7 +16,7 @@ def DynamicFormGenerator(key: str, *args, submit_label: str="Submit", **kwargs) 
     if form_class: # class already exists
         return form_class(*args, **kwargs)
 
-    section = form_sections.get(key, None)
+    section:configparser.SectionProxy = form_sections.get(key, None)
     if section is None: # the given key does not exist in the config
         return None
 
