@@ -6,7 +6,6 @@ class Application(bottle.Bottle):
     def __init__(self, *args, **kwargs):
         # bottle setup
         bottle.TEMPLATE_PATH.insert(0, "application/views")
-        bottle.Jinja2Template.defaults["project"] = config.get("repo", "name")
 
         # renaming and convenience stuff
         self.template = bottle.jinja2_template

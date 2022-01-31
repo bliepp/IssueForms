@@ -51,6 +51,13 @@ def DynamicFormGenerator(key: str, *args, submit_label: str="Submit", **kwargs) 
     submit_label = section.get("submit_text", submit_label)
 
     setattr(IssueForm, "submit", SubmitField(submit_label))
+    IssueForm.set_meta("project", section.get(
+        "project",
+        fallback=section.get(
+            "repo_name",
+            fallback=config.get("repo", "name", fallback=None))
+            )
+        )
     IssueForm.set_meta("title", data["name"])
     IssueForm.set_meta("description", data["description"])
     IssueForm.set_meta("fullwidth", section.getboolean("fullwidth", False))

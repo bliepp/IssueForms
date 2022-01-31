@@ -15,7 +15,7 @@ def issue_form(key: str):
         pass
 
     return dict(
-        title=form.get_meta("title"),
+        title=form.get_meta("project") + " - " + form.get_meta("title"),
         description=form.get_meta("description"),
         fullwidth=form.get_meta("fullwidth"),
         hide_title=form.get_meta("hide_title"),
