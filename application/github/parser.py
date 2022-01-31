@@ -59,7 +59,7 @@ class DropdownGithubElement(GithubElement, key="dropdown"):
         )
 
         if self.multiple:
-            return SelectMultipleField(render_kw={"size": f"{len(self.options)}"}, **kwargs)
+            return SelectMultipleField(render_kw={"size": f"{len(self.options)}"}, coerce=int, **kwargs)
 
         kwargs["choices"] = [("", "---")] + kwargs["choices"]
         return SelectField(**kwargs)
