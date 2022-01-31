@@ -3,12 +3,20 @@
 <main class="container{% if fullwidth %}-fluid{% endif %}">
 	<form method="POST" enctype="multipart/form-data">
 		{{form.csrf_token}}
-		{% for key, value in form._fields.items()  %}
+		{% for key, field in form._fields.items()  %}
 		{% if key != "submit" %}
-		<div class="form-floating">
-			{{ value(class_="form-control") }}
-			{{ value.label }}
-		</div><br />
+			{% if field.errors %}
+			{% for error in field.errors %}
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					{{ error }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+			{% endif %}
+			<div class="form-floating">
+				{{ field(class_="form-control") }}
+				{{ field.label }}
+			</div><br />
 		{% endif %}
 		{% endfor %}
 		{{ form.submit(class_="form-control btn btn-dark") }}
