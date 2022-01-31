@@ -1,3 +1,4 @@
+import wtforms
 from .application import app
 from .forms import DynamicFormGenerator
 
@@ -6,7 +7,7 @@ from .forms import DynamicFormGenerator
 @app.post("/<key:path>")
 @app.view("issue.html")
 def issue_form(key: str):
-    form = DynamicFormGenerator(key, app.request.POST)
+    form:wtforms.Form = DynamicFormGenerator(key, app.request.POST)
     if not form:
         app.abort(404)
 
