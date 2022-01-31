@@ -1,6 +1,5 @@
 from typing import Union
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import Form, StringField, SubmitField
 from wtforms.validators import DataRequired
 
 from .github.parser import GithubElement, MarkdownGithubElement
@@ -8,11 +7,11 @@ from .github.issue import get_issue_form_data
 from .config import config, form_sections
 
 
-form_classes = {}
+__form_classes = {}
 
 
 def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Union[tuple, None]:
-    form_class = form_classes.get(key, None)
+    form_class = __form_classes.get(key, None)
     if form_class: # class already exists
         return form_class(**kwargs)
 
@@ -30,7 +29,7 @@ def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Unio
     data = get_issue_form_data(**login_credentials)
     body = data["body"]
 
-    class IssueForm(FlaskForm):
+    class IssueForm(Form):
         __meta_data = {}
         form_title = StringField("Title*", default=data["title"], validators=[DataRequired()], render_kw={
             "autofocus": "autofocus",
@@ -58,6 +57,6 @@ def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Unio
     IssueForm.set_meta("hide_title", section.getboolean("hide_title", False))
     IssueForm.set_meta("login_credentials", login_credentials)
 
-    form_classes[key] = IssueForm
+    __form_classes[key] = IssueForm
 
     return IssueForm(**kwargs)

@@ -1,7 +1,8 @@
 {% extends "template.html" %}
 {% block content %}
 <main class="container{% if fullwidth %}-fluid{% endif %}">
-	<form method="post">
+	<form method="POST" enctype="multipart/form-data">
+		{{form.csrf_token}}
 		{% for key, value in form._fields.items()  %}
 		{% if key != "submit" %}
 		<div class="form-floating">
