@@ -38,7 +38,7 @@ def add_issue(REPO_OWNER: str, REPO_NAME: str, USERNAME: str, PASSWORD: str, **k
 
     if r.status_code == 201:
         print("Success")
-        print(r.text)
+        #print(r.text)
     else:
-        print("Failure")
-        print(r.text)
+        print(f"Failure: {r.status_code}")
+        #print(r.text)
