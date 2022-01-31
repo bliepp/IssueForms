@@ -6,6 +6,16 @@ from .forms import DynamicFormGenerator
 from .github.issue import add_issue
 
 
+@app.error(404)
+@app.view("404.html")
+def error404(error):
+    return dict(
+        title=f"{error.status_code} - {error.body}",
+        hide_title=True,
+        fullwidth=True,
+    )
+
+
 @app.get("/thankyou")
 @app.view("thankyou.html")
 def thankyou():
@@ -22,7 +32,7 @@ def thankyou():
 def issue_form(key: str):
     form:wtforms.Form = DynamicFormGenerator(key, app.request.POST)
     if not form:
-        app.abort(404)
+        app.abort(404, f"Not found: '/{key}'")
 
     if app.request.method == "POST" and form.validate():
         fields = copy.deepcopy(form._fields)

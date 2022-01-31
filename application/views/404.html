@@ -1,0 +1,9 @@
+{% extends "template.html" %}
+{% block content %}
+<main class="container{% if fullwidth %}-fluid{% endif %}">
+	<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+		<h1>{{ title }}</h1>
+		<span>This site does not exist. Please check the URL.</span>
+	</div>
+</main>
+{% endblock %}
