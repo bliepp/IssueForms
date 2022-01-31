@@ -1,30 +1,27 @@
-from flask import Flask, render_template, abort
-
+import bottle
 from .config import config
-from .forms import DynamicFormGenerator
-
-app = Flask(__name__)
 
 
-@app.context_processor
-def register_project():
-    return {
-        "project": config.get("repo", "name"),
-    }
+class Application(bottle.Bottle):
+    def __init__(self, *args, **kwargs):
+        # bottle setup
+        bottle.TEMPLATE_PATH.insert(0, "application/views")
+
+        # renaming and convenience stuff
+        self.template = bottle.jinja2_template
+        self.view = bottle.jinja2_view
+        self.abort = bottle.abort
+        self.redirect = bottle.redirect
+        self.request = bottle.request
+
+        # initialize
+        super().__init__(*args, **kwargs)
 
 
+app = Application()
 
-@app.route("/<path:key>/", methods=["GET", "POST"])
-def issue_form(key: str):
-    form = DynamicFormGenerator(key, meta={"csrf": False})
-    if not form:
-        abort(404)
 
-    return render_template(
-        "issue.html",
-        title=form.get_meta("title"),
-        description=form.get_meta("description"),
-        fullwidth=form.get_meta("fullwidth"),
-        hide_title=form.get_meta("hide_title"),
-        form=form,
-        )
+@app.hook('before_request')
+def strip_path():
+    # remove trailing slash
+    app.request.environ['PATH_INFO'] = app.request.environ['PATH_INFO'].rstrip('/')

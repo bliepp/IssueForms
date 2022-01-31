@@ -1,5 +1,4 @@
 # valid keys: https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema
-from flask_wtf import FlaskForm
 from wtforms import Field, SelectField, StringField, TextAreaField, SelectMultipleField
 from wtforms.validators import DataRequired
 
@@ -44,7 +43,7 @@ class DropdownGithubElement(GithubElement, key="dropdown"):
             raise MissingRequiredArgument("label")
         if self.options is None:
             raise MissingRequiredArgument("options")
-        self.description = attributes.get("description", "")
+        self.description = {"content": attributes.get("description", "")}
         self.multiple = attributes.get("multiple", False)
 
         self.id = id
@@ -60,7 +59,7 @@ class DropdownGithubElement(GithubElement, key="dropdown"):
         )
 
         if self.multiple:
-            return SelectMultipleField(render_kw={"size": f"{len(self.options)}"}, **kwargs)
+            return SelectMultipleField(render_kw={"size": f"{len(self.options)}"}, coerce=int, **kwargs)
 
         kwargs["choices"] = [("", "---")] + kwargs["choices"]
         return SelectField(**kwargs)
@@ -74,7 +73,7 @@ class InputGithubElement(GithubElement, key="input"):
         self.label = attributes.get("label", None)
         if self.label is None:
             raise MissingRequiredArgument("label")
-        self.description = attributes.get("description", "")
+        self.description = {"content": attributes.get("description", "")}
         self.placeholder = attributes.get("placeholder", "")
         self.value = attributes.get("value", None)
 
@@ -112,7 +111,7 @@ class TextareaGithubElement(GithubElement, key="textarea"):
         self.label = attributes.get("label", None)
         if self.label is None:
             raise MissingRequiredArgument("label")
-        self.description = attributes.get("description", "")
+        self.description = {"content": attributes.get("description", ""), "type": attributes.get("render", None)}
         self.placeholder = attributes.get("placeholder", "")
         self.value = attributes.get("value", None)
         self.render = attributes.get("render", None)

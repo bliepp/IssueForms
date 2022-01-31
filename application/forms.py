@@ -1,6 +1,6 @@
+import configparser
 from typing import Union
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import Form, StringField, SubmitField
 from wtforms.validators import DataRequired
 
 from .github.parser import GithubElement, MarkdownGithubElement
@@ -8,15 +8,15 @@ from .github.issue import get_issue_form_data
 from .config import config, form_sections
 
 
-form_classes = {}
+__form_classes = {}
 
 
-def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Union[tuple, None]:
-    form_class = form_classes.get(key, None)
+def DynamicFormGenerator(key: str, *args, submit_label: str="Submit", **kwargs) -> Union[tuple, None]:
+    form_class = __form_classes.get(key, None)
     if form_class: # class already exists
-        return form_class(**kwargs)
+        return form_class(*args, **kwargs)
 
-    section = form_sections.get(key, None)
+    section:configparser.SectionProxy = form_sections.get(key, None)
     if section is None: # the given key does not exist in the config
         return None
 
@@ -28,9 +28,9 @@ def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Unio
     login_credentials["REPO_NAME"] = section.get("repo_name", fallback=config.get("repo", "name", fallback=None))
 
     data = get_issue_form_data(**login_credentials)
-    body = data["body"]
+    body = data.get("body", [])
 
-    class IssueForm(FlaskForm):
+    class IssueForm(Form):
         __meta_data = {}
         form_title = StringField("Title*", default=data["title"], validators=[DataRequired()], render_kw={
             "autofocus": "autofocus",
@@ -52,12 +52,20 @@ def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Unio
     submit_label = section.get("submit_text", submit_label)
 
     setattr(IssueForm, "submit", SubmitField(submit_label))
+    IssueForm.set_meta("project", section.get(
+        "project",
+        fallback=section.get(
+            "repo_name",
+            fallback=config.get("repo", "name", fallback=None))
+            )
+        )
     IssueForm.set_meta("title", data["name"])
+    IssueForm.set_meta("labels", data.get("labels", []))
     IssueForm.set_meta("description", data["description"])
     IssueForm.set_meta("fullwidth", section.getboolean("fullwidth", False))
     IssueForm.set_meta("hide_title", section.getboolean("hide_title", False))
     IssueForm.set_meta("login_credentials", login_credentials)
 
-    form_classes[key] = IssueForm
+    __form_classes[key] = IssueForm
 
-    return IssueForm(**kwargs)
+    return IssueForm(*args, **kwargs)
