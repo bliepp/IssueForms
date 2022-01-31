@@ -10,10 +10,10 @@ from .config import config, form_sections
 __form_classes = {}
 
 
-def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Union[tuple, None]:
+def DynamicFormGenerator(key: str, *args, submit_label: str="Submit", **kwargs) -> Union[tuple, None]:
     form_class = __form_classes.get(key, None)
     if form_class: # class already exists
-        return form_class(**kwargs)
+        return form_class(*args, **kwargs)
 
     section = form_sections.get(key, None)
     if section is None: # the given key does not exist in the config
@@ -59,4 +59,4 @@ def DynamicFormGenerator(key: str, submit_label: str="Submit", **kwargs) -> Unio
 
     __form_classes[key] = IssueForm
 
-    return IssueForm(**kwargs)
+    return IssueForm(*args, **kwargs)

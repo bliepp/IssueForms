@@ -6,12 +6,13 @@ from .forms import DynamicFormGenerator
 @app.post("/<key:path>")
 @app.view("issue.html")
 def issue_form(key: str):
-    form = DynamicFormGenerator(key)
+    form = DynamicFormGenerator(key, app.request.POST)
     if not form:
         app.abort(404)
 
     if app.request.method == "POST" and form.validate():
-        print("valdiated")
+        # TODO: make github api request, redirect to thank you page
+        pass
 
     return dict(
         title=form.get_meta("title"),
