@@ -28,7 +28,7 @@ def DynamicFormGenerator(key: str, *args, submit_label: str="Submit", **kwargs) 
     login_credentials["REPO_NAME"] = section.get("repo_name", fallback=config.get("repo", "name", fallback=None))
 
     data = get_issue_form_data(**login_credentials)
-    body = data["body"]
+    body = data.get("body", [])
 
     class IssueForm(Form):
         __meta_data = {}
@@ -60,6 +60,7 @@ def DynamicFormGenerator(key: str, *args, submit_label: str="Submit", **kwargs) 
             )
         )
     IssueForm.set_meta("title", data["name"])
+    IssueForm.set_meta("labels", data.get("labels", []))
     IssueForm.set_meta("description", data["description"])
     IssueForm.set_meta("fullwidth", section.getboolean("fullwidth", False))
     IssueForm.set_meta("hide_title", section.getboolean("hide_title", False))
