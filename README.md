@@ -1,12 +1,12 @@
-**Important: This is still work in progress and the actual GitHub API call is not connected to the form action yet!**
+**Important: This is still work in progress. While everything should work jsut fine if configured correctly misconfigurations might throw errors!**
 # IssueForms
 IssueForms is an open source way to expose your issue form templates to users, which don't have a GitHub account.
 
-It allows not only anonymous issue tracking for private and public repositories but also enables form based issue tracking for private repositories, even for the free plan. 
+It allows not only anonymous issue tracking for private and public repositories but also enables form based issue tracking for private repositories, even for the free plan.
 
 ## How it works
 1. Run IssueForms on any server that allows you to host WSGI applications
-1. IssueForms reads the issue form templates from your github repository and parses them into Flask compatible WTForms.
+1. IssueForms reads the issue form templates from your github repository and parses them into WTForms.
 1. When submitting a form, IssueForms connects to the GitHub API and submits the issue with an account of your choice.
 
 Since the parsing and issue message generation happens inside of IssueForms the repo does not have to be public (even with the free plan).
@@ -32,11 +32,11 @@ The next step is to create and modify the `config.ini`
 ```
 Now run a development server
 ```bash
-(.venv) IssueForms $ chmod 755 main.py # make it executable
-(.venv) IssueForms $ ./main.py
+(.venv) IssueForms $ chmod 755 issueforms.py # make it executable
+(.venv) IssueForms $ ./issueforms.py
 ```
-**Important: Flask's builtin WSGI server is only for development and testing. For production/deployment use `gunicorn`, `cheroot` or something similar!**
+**Important: bottles's builtin WSGI server is only for development and testing. For production/deployment use `gunicorn`, `cheroot` or something similar!**
 
 ## Notes
-* The project depends not only on [Flask](https://flask.palletsprojects.com/en/2.0.x/), but also some Flask plugins (mainly flask-wtf).
+* The project depends on [bottle](http://bottlepy.org/) and [wtforms](https://wtforms.readthedocs.io/en/2.3.x/).
 * The HTML, CSS and JS part of the program depends on [Bootstrap 5](https://getbootstrap.com/). This is implemented via a CDN, so no direct dependency is needed.
