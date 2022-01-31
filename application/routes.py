@@ -1,6 +1,9 @@
+import collections
+import copy
 import wtforms
 from .application import app
 from .forms import DynamicFormGenerator
+from .github.issue import add_issue
 
 
 @app.get("/<key:path>")
@@ -12,8 +15,32 @@ def issue_form(key: str):
         app.abort(404)
 
     if app.request.method == "POST" and form.validate():
+        fields = copy.deepcopy(form._fields)
+        fields.pop("submit") # remove submit button
+        form_title = fields.pop("form_title").data
+
+        content = ""
+        for key, item in fields.items():
+            content += f"### {item.label.text}\n"
+            if issubclass(item.field_class, wtforms.fields.SelectFieldBase):
+                options = dict(item.choices)
+                indices = list(item.data)
+                selection = ["* " + options[int(i)] for i in indices]
+                content += "\n".join(selection) + "\n"
+            if issubclass(item.field_class, wtforms.fields.StringField):
+                if render_type:=item.description.get("type"):
+                    item.data = "```" + render_type + "\n" + item.data + "\n```"
+                content += item.data + "\n"
+
+            content += "\n"
+
         # TODO: make github api request, redirect to thank you page
-        pass
+
+        add_issue(
+            **form.get_meta("login_credentials"),
+            title=form_title,
+            body=content
+            )
 
     return dict(
         title=form.get_meta("project") + " - " + form.get_meta("title"),
