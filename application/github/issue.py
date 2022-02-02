@@ -23,22 +23,15 @@ def get_issue_form_data(FILE_NAME: str, REPO_OWNER: str, REPO_NAME: str, USERNAM
 
 
 def add_issue(REPO_OWNER: str, REPO_NAME: str, USERNAME: str, PASSWORD: str, **kwargs) -> None:
-    USERNAME = config.get("account", "user", fallback=None)
-    PASSWORD = config.get("account", "password", fallback=None)
-
-    REPO_OWNER = config.get("repo", "owner", fallback=None)
-    REPO_NAME = config.get("repo", "name", fallback=None)
-
-
-    session = requests.Session()
-    session.auth = (USERNAME, PASSWORD)
-
     url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/issues"
-    r = session.post(url, json.dumps(kwargs))
 
-    if r.status_code == 201:
-        print("Success")
-        #print(r.text)
-    else:
-        print(f"Failure: {r.status_code}")
-        #print(r.text)
+    with requests.Session() as session:
+        session.auth = (USERNAME, PASSWORD)
+        r = session.post(url, json.dumps(kwargs))
+
+        if r.status_code == 201:
+            print("Success")
+            #print(r.text)
+        else:
+            print(f"Failure: {r.status_code}")
+            #print(r.text)
