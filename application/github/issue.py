@@ -1,10 +1,5 @@
-from configparser import SectionProxy
-import json
-import yaml
+import json, yaml
 import requests
-
-from ..config import config
-from .parser import *
 
 
 
