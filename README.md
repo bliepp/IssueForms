@@ -1,4 +1,4 @@
-**Important: This is still work in progress. While everything should work jsut fine if configured correctly misconfigurations might throw errors!**
+**Important: This is still work in progress. While everything should work just fine if configured correctly misconfigurations might throw really bad errors!**
 # IssueForms
 IssueForms is an open source way to expose your issue form templates to users, which don't have a GitHub account.
 
