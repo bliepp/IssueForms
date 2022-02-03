@@ -1,9 +1,9 @@
-import collections
 import copy
 import wtforms
 from .application import app
-from .forms import DynamicFormGenerator
-from .github.issue import add_issue
+from .forms import DynamicFormGenerator, select_api, Form
+from .issues_api import IssueAPI
+
 
 
 @app.error(404)
@@ -16,6 +16,7 @@ def error404(error):
     )
 
 
+
 @app.get("/thankyou")
 @app.view("thankyou.html")
 def thankyou():
@@ -26,13 +27,17 @@ def thankyou():
     )
 
 
+
 @app.get("/<key:path>")
 @app.post("/<key:path>")
 @app.view("issue.html")
 def issue_form(key: str):
-    form:wtforms.Form = DynamicFormGenerator(key, app.request.POST)
+    api : IssueAPI = select_api()
+
+    form : Form = DynamicFormGenerator(key, app.request.POST)
     if not form:
         app.abort(404, f"Not found: '/{key}'")
+
 
     if app.request.method == "POST" and form.validate():
         fields = copy.deepcopy(form._fields)
@@ -54,7 +59,7 @@ def issue_form(key: str):
 
             content += "\n"
 
-        add_issue(
+        api.post(
             **form.get_meta("login_credentials"),
             title=form_title,
             body=content,

@@ -2,11 +2,11 @@
 from wtforms import Field, SelectField, StringField, TextAreaField, SelectMultipleField
 from wtforms.validators import DataRequired
 
-from .exceptions import MissingKey, MissingRequiredArgument, UnknownGithubElementType
+from application.exceptions import *
 
 
 
-class GithubElement():
+class ParserElement():
     __element_types = {}
 
 
@@ -29,12 +29,12 @@ class GithubElement():
 
 
 
-class CheckboxesGithubElement(GithubElement, key="checkboxes"):
+class CheckboxesElement(ParserElement, key="checkboxes"):
     pass # for now not implemented
 
 
 
-class DropdownGithubElement(GithubElement, key="dropdown"):
+class DropdownElement(ParserElement, key="dropdown"):
     def __init__(self, attributes: dict={}, id: str="", validations: dict={}, **kwargs) -> None:
         super().__init__()
         self.label = attributes.get("label", None)
@@ -67,7 +67,7 @@ class DropdownGithubElement(GithubElement, key="dropdown"):
 
 
 
-class InputGithubElement(GithubElement, key="input"):
+class InputElement(ParserElement, key="input"):
     def __init__(self, attributes: dict={}, id: str="", validations: dict={}, **kwargs) -> None:
         super().__init__()
         self.label = attributes.get("label", None)
@@ -92,7 +92,7 @@ class InputGithubElement(GithubElement, key="input"):
 
 
 
-class MarkdownGithubElement(GithubElement, key="markdown"):
+class MarkdownElement(ParserElement, key="markdown"):
     def __init__(self, attributes: dict={}, **kwargs) -> None:
         super().__init__()
         self.value = attributes.get("value", None)
@@ -105,7 +105,7 @@ class MarkdownGithubElement(GithubElement, key="markdown"):
 
 
 
-class TextareaGithubElement(GithubElement, key="textarea"):
+class TextareaElement(ParserElement, key="textarea"):
     def __init__(self, attributes: dict={}, id: str="", validations: dict={}, **kwargs) -> None:
         super().__init__()
         self.label = attributes.get("label", None)
