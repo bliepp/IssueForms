@@ -1,2 +1,2 @@
-from .base import IssueAPI
-from .github import GithubIssueAPI
+from application.issues.base import IssueAPI
+from application.issues.github import GithubIssueAPI

@@ -1,5 +1,5 @@
 import bottle
-from .config import config
+
 
 
 class Application(bottle.Bottle):
@@ -18,7 +18,9 @@ class Application(bottle.Bottle):
         super().__init__(*args, **kwargs)
 
 
+
 app = Application()
+
 
 
 @app.hook('before_request')

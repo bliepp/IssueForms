@@ -1,8 +1,9 @@
 import copy
 import wtforms
-from .application import app
-from .forms import DynamicFormGenerator, select_api, Form
-from .issues import IssueAPI
+
+from application import app
+from application.forms import DynamicFormGenerator, select_api, Form
+from application.issues import IssueAPI
 
 
 

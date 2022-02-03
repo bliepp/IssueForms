@@ -2,9 +2,9 @@ from typing import Union
 from wtforms import Form, StringField, SubmitField
 from wtforms.validators import DataRequired
 
-from .issues import IssueAPI, GithubIssueAPI
-from .parser import ParserElement, MarkdownElement
-from .config import config, form_sections, SectionProxy
+from application.issues import IssueAPI, GithubIssueAPI
+from application.parser import ParserElement, MarkdownElement
+from application.config import config, form_sections, SectionProxy
 
 
 
@@ -30,7 +30,7 @@ def DynamicFormGenerator(key: str, *args, submit_label: str="Submit", **kwargs) 
         return FormClass(*args, **kwargs)
 
     # get section of config matching the key
-    section : SectionProxy = form_sections.get(key, fallback=None)
+    section : SectionProxy = form_sections.get(key, None)
     if section is None: # the given key does not exist in the config
         return None
 
