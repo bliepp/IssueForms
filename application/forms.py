@@ -2,7 +2,7 @@ from typing import Union
 from wtforms import Form, StringField, SubmitField
 from wtforms.validators import DataRequired
 
-from .issues_api import IssueAPI, GithubIssueAPI
+from .issues import IssueAPI, GithubIssueAPI
 from .parser import ParserElement, MarkdownElement
 from .config import config, form_sections, SectionProxy
 

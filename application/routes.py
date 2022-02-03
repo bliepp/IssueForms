@@ -2,7 +2,7 @@ import copy
 import wtforms
 from .application import app
 from .forms import DynamicFormGenerator, select_api, Form
-from .issues_api import IssueAPI
+from .issues import IssueAPI
 
 
 
